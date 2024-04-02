@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Player from './Player';
 import Meteor from './Meteor';
 
+import Info from './Info.jsx';
+
 const Game = () => {
     // State variables
     const [viewportSize, setViewportSize] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -36,8 +38,8 @@ const Game = () => {
 
     // Generate meteors at random positions
     const generateMeteors = () => {
-        const numMeteors = 10;
-        const meteorSpreadFactor = 2; // Adjust this factor as needed
+        const numMeteors =150;
+        const meteorSpreadFactor = 5; // Adjust this factor as needed
         const newMeteors = [];
         for (let i = 0; i < numMeteors; i++) {
             newMeteors.push({
@@ -48,8 +50,8 @@ const Game = () => {
                 },
                 radius: 15, // Adjust the radius of meteors as needed
                 velocity: {
-                    x: Math.random() * 4 - 1,
-                    y: Math.random() * 3 - 1,
+                    x: Math.random() * 3 - 1,
+                    y: Math.random() * 2 - 1,
                 },
             });
         }
@@ -68,14 +70,17 @@ const Game = () => {
                 const distanceY = playerPosition.y - meteor.position.y;
                 const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
 
-                if (playerPosition.x >= 2000) {
+                if (playerPosition.x >= 9000) {
                     Setwin(true)
                 }
                 // Collision detection
                 if (distance < 40 + meteor.radius) {
                     setGameOver(true);
                     return true; // Collision detected
+                }else{
+                    console.log(playerPosition)
                 }
+
                 return false;
 
             });
@@ -110,7 +115,7 @@ const Game = () => {
             if (!timer) {
                 setTimer(setTimeout(() => {
                     // After 3 seconds, increase speed to 7
-                    setSpeed(7);
+                    setSpeed(8);
                 }, 3000));
             }
         };
@@ -167,8 +172,9 @@ const Game = () => {
                     transform: `translate(${backgroundPosition.x}px, ${backgroundPosition.y}px)`,
                 }}
             >
-                <Player position={playerPosition} /> 
-                <div className='text-green-600'>{playerPosition.x} {speed}</div>
+                <Player speed={speed} position={playerPosition} /> 
+                <Info  playerPosition={playerPosition} speed={speed}></Info>
+
                 {meteors.map((meteor) => (
                     <Meteor key={meteor.id} position={meteor.position} />
                 ))}
