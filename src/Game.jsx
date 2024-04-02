@@ -11,7 +11,7 @@ const Game = () => {
     const [keysPressed, setKeysPressed] = useState({});
     const [speed, setSpeed] = useState(5); // Initial speed
     const [gameOver, setGameOver] = useState(false);
-    const [win,Setwin] = useState(false)
+    const [win, Setwin] = useState(false)
 
     // Timer for tracking key press duration
     const [timer, setTimer] = useState(null);
@@ -36,7 +36,7 @@ const Game = () => {
 
     // Generate meteors at random positions
     const generateMeteors = () => {
-        const numMeteors = 100;
+        const numMeteors = 10;
         const meteorSpreadFactor = 2; // Adjust this factor as needed
         const newMeteors = [];
         for (let i = 0; i < numMeteors; i++) {
@@ -58,7 +58,7 @@ const Game = () => {
 
     // Game loop
     useEffect(() => {
-        
+
         const moveMeteors = () => {
             if (gameOver) return; // Stop moving meteors if game is over
 
@@ -67,8 +67,8 @@ const Game = () => {
                 const distanceX = playerPosition.x - meteor.position.x;
                 const distanceY = playerPosition.y - meteor.position.y;
                 const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
-                
-                if(playerPosition.x >=2000){
+
+                if (playerPosition.x >= 2000) {
                     Setwin(true)
                 }
                 // Collision detection
@@ -77,7 +77,7 @@ const Game = () => {
                     return true; // Collision detected
                 }
                 return false;
-                
+
             });
 
             if (!collided) {
@@ -157,32 +157,35 @@ const Game = () => {
         }));
     }, [keysPressed, speed, viewportSize]); // Include speed in dependencies
 
-    
+
 
     return (
         <div className="relative w-screen h-screen bg-[url('/src/assets/space.jpeg')] overflow-hidden">
             <div
                 className="absolute transition-all duration-500"
                 style={{
-                    transform: `translate(${+backgroundPosition.x}px, ${+backgroundPosition.y}px)`,
+                    transform: `translate(${backgroundPosition.x}px, ${backgroundPosition.y}px)`,
                 }}
             >
-                <Player position={playerPosition} /> <div className='text-green-600'>{playerPosition.x} {speed}</div>
+                <Player position={playerPosition} /> 
+                <div className='text-green-600'>{playerPosition.x} {speed}</div>
                 {meteors.map((meteor) => (
                     <Meteor key={meteor.id} position={meteor.position} />
                 ))}
-
-                
             </div>
             {gameOver && (
                 <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-4xl bg-black bg-opacity-50">
-                    Game Over !
+                    Game Over!
                 </div>
             )}
-
-            
+            {win && (
+                <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-4xl bg-black bg-opacity-50">
+                    You Won!
+                </div>
+            )}
         </div>
     );
+    
 };
 
 export default Game;
