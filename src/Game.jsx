@@ -101,7 +101,7 @@ const Game = () => {
         const gameLoopInterval = setInterval(moveMeteors, 30);
 
         return () => clearInterval(gameLoopInterval);
-    }, [meteors, gameOver, playerPosition]); // Add dependencies to prevent stale closures
+    }, [meteors, gameOver]); // Add dependencies to prevent stale closures
 
     // Handle keyboard events for player movement
     useEffect(() => {
@@ -172,8 +172,7 @@ const Game = () => {
                     transform: `translate(${backgroundPosition.x}px, ${backgroundPosition.y}px)`,
                 }}
             >
-                <Player speed={speed} position={playerPosition} /> 
-                <Info  playerPosition={playerPosition} speed={speed}></Info>
+                <Player  speed={speed} position={playerPosition}/> 
 
                 {meteors.map((meteor) => (
                     <Meteor key={meteor.id} position={meteor.position} />
