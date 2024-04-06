@@ -66,7 +66,7 @@ const Game = () => {
 
             const collided = meteors.some((meteor) => {
                 // Calculate distance between player and meteor
-                const distanceX = playerPosition.x - meteor.position.x;
+                const distanceX = (playerPosition.x+40) - meteor.position.x;
                 const distanceY = playerPosition.y - meteor.position.y;
                 const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
 
@@ -74,7 +74,7 @@ const Game = () => {
                     Setwin(true)
                 }
                 // Collision detection
-                if (distance < 40 + meteor.radius) {
+                if (((distance < 40 + meteor.radius) || playerPosition.y > 740) || playerPosition.y < 0) {
                     setGameOver(true);
                     return true; // Collision detected
                 }else{

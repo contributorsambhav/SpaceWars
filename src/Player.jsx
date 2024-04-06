@@ -11,7 +11,7 @@ const Player = ({ position ,speed}) => {
             <img src="/src/assets/ufo3.png" id="ufo" alt="hi there" />
 
             <div className='text-green-600 text-2xl text-center' style={{ left: position.x, top: position.y, zIndex: 2 }}>
-                Position: {position.x}, {position.y} | Speed: {speed}
+                Position: {position.x}, {position.y} <br></br> Speed: {speed}
             </div>
         </div>
     );
