@@ -3,11 +3,10 @@ import Player from './Player';
 import Meteor from './Meteor';
 import Sound from 'react-sound';
 
-
-
 const Game = () => {
     // State variables
     const [playStatus, setPlayStatus] = useState(Sound.status.STOPPED);
+    const [loseStatus, setLoseStatus] = useState(Sound.status.STOPPED);
     const playSound = () => {
         setPlayStatus(Sound.status.PLAYING);
     };
@@ -15,7 +14,8 @@ const Game = () => {
     const stopSound = () => {
         setPlayStatus(Sound.status.STOPPED);
     };
-    const [timeRemaining, setTimeRemaining] = useState(3); // Initial time limit in seconds
+
+    const [timeRemaining, setTimeRemaining] = useState(90); // Initial time limit in seconds
 
     const [viewportSize, setViewportSize] = useState({ width: window.innerWidth, height: window.innerHeight });
     const [playerPosition, setPlayerPosition] = useState({ x: viewportSize.width / 2, y: viewportSize.height / 2 });
@@ -24,7 +24,7 @@ const Game = () => {
     const [keysPressed, setKeysPressed] = useState({});
     const [speed, setSpeed] = useState(5); // Initial speed
     const [gameOver, setGameOver] = useState(false);
-    const [win, Setwin] = useState(false)
+    const [win, setWin] = useState(false);
 
     // Timer for tracking key press duration
     const [timer, setTimer] = useState(null);
@@ -45,13 +45,16 @@ const Game = () => {
     // Game setup
     useEffect(() => {
         generateMeteors();
-    
+
         const timerInterval = setInterval(() => {
-            setTimeRemaining((prevTime) => prevTime - 1); // Decrement time remaining
+            setTimeRemaining(prevTime => {
+                const newTime = prevTime - 1;
+                console.log("New time:", newTime); // Log the updated time
+                return newTime;
+            });
         }, 1000);
-    
+
         return () => clearInterval(timerInterval); // Cleanup timer interval
-        console.log(timeRemaining)
     }, []);
 
     useEffect(() => {
@@ -60,10 +63,9 @@ const Game = () => {
         }
     }, [timeRemaining]);
 
-
     // Generate meteors at random positions
     const generateMeteors = () => {
-        const numMeteors =150;
+        const numMeteors = 150;
         const meteorSpreadFactor = 5; // Adjust this factor as needed
         const newMeteors = [];
         for (let i = 0; i < numMeteors; i++) {
@@ -85,27 +87,26 @@ const Game = () => {
 
     // Game loop
     useEffect(() => {
-
         const moveMeteors = () => {
             if (gameOver) return; // Stop moving meteors if game is over
 
             const collided = meteors.some((meteor) => {
                 // Calculate distance between player and meteor
-                const distanceX = (playerPosition.x+40) - meteor.position.x;
+                const distanceX = (playerPosition.x + 40) - meteor.position.x;
                 const distanceY = playerPosition.y - meteor.position.y;
                 const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
 
                 if (playerPosition.x >= 9000) {
-                    Setwin(true)
+                    setWin(true);
                     playSound();
                 }
                 // Collision detection
                 if (((distance < 40 + meteor.radius) || playerPosition.y > 740) || playerPosition.y < 0) {
                     setGameOver(true);
+                    setLoseStatus(Sound.status.PLAYING); // Play sound on loss
                     return true; // Collision detected
                 }
                 return false;
-
             });
 
             if (!collided) {
@@ -124,7 +125,7 @@ const Game = () => {
         const gameLoopInterval = setInterval(moveMeteors, 30);
 
         return () => clearInterval(gameLoopInterval);
-    }, [meteors, gameOver]); // Add dependencies to prevent stale closures
+    }, [meteors, gameOver, playerPosition]); // Add dependencies to prevent stale closures
 
     // Handle keyboard events for player movement
     useEffect(() => {
@@ -185,39 +186,37 @@ const Game = () => {
         }));
     }, [keysPressed, speed, viewportSize]); // Include speed in dependencies
 
+    return (
+        <>
+            <Sound url="/src/assets/win.wav" playStatus={playStatus} onFinishedPlaying={stopSound} />
+            <Sound url="/src/assets/gameOver.wav" playStatus={loseStatus} onFinishedPlaying={stopSound} />
 
+            <div className="relative w-screen h-screen bg-[url('/src/assets/space.jpeg')] overflow-hidden">
+                <div
+                    className="absolute transition-all duration-500"
+                    style={{
+                        transform: `translate(${backgroundPosition.x}px, ${backgroundPosition.y}px)`,
+                    }}
+                >
+                    <Player timeRemaining={timeRemaining} speed={speed} position={playerPosition} />
 
-    return (<>
-    <Sound url="/src/assets/win.wav" playStatus={playStatus} onFinishedPlaying={stopSound} />
-
-        <div className="relative w-screen h-screen bg-[url('/src/assets/space.jpeg')] overflow-hidden">
-            <div
-                className="absolute transition-all duration-500"
-                style={{
-                    transform: `translate(${backgroundPosition.x}px, ${backgroundPosition.y}px)`,
-                }}
-            >
-                <Player  speed={speed} position={playerPosition}/> 
-
-                {meteors.map((meteor) => (
-                    <Meteor key={meteor.id} position={meteor.position} />
-                ))}
+                    {meteors.map((meteor) => (
+                        <Meteor key={meteor.id} position={meteor.position} />
+                    ))}
+                </div>
+                {gameOver && (
+                    <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-4xl bg-black bg-opacity-50">
+                        Game Over!
+                    </div>
+                )}
+                {win && (
+                    <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-4xl bg-black bg-opacity-50">
+                        You Won!
+                    </div>
+                )}
             </div>
-            {gameOver && (
-                <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-4xl bg-black bg-opacity-50">
-                    Game Over!
-                </div>
-            )}
-            {win && (
-                <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-4xl bg-black bg-opacity-50">
-                    You Won!
-                </div>
-            )}
-        </div>
-    </>
+        </>
     );
-
-    
 };
 
 export default Game;
