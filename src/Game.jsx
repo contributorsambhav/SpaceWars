@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Player from './Player';
 import Meteor from './Meteor';
+import Sound from 'react-sound';
 
-import Info from './Info.jsx';
+
 
 const Game = () => {
     // State variables
+    const [playStatus, setPlayStatus] = useState(Sound.status.STOPPED);
+    const playSound = () => {
+        setPlayStatus(Sound.status.PLAYING);
+    };
+
+    const stopSound = () => {
+        setPlayStatus(Sound.status.STOPPED);
+    };
+
     const [viewportSize, setViewportSize] = useState({ width: window.innerWidth, height: window.innerHeight });
     const [playerPosition, setPlayerPosition] = useState({ x: viewportSize.width / 2, y: viewportSize.height / 2 });
     const [backgroundPosition, setBackgroundPosition] = useState({ x: 0, y: 0 });
@@ -72,6 +82,7 @@ const Game = () => {
 
                 if (playerPosition.x >= 9000) {
                     Setwin(true)
+                    playSound();
                 }
                 // Collision detection
                 if (((distance < 40 + meteor.radius) || playerPosition.y > 740) || playerPosition.y < 0) {
@@ -164,7 +175,9 @@ const Game = () => {
 
 
 
-    return (
+    return (<>
+    <Sound url="/src/assets/win.wav" playStatus={playStatus} onFinishedPlaying={stopSound} />
+
         <div className="relative w-screen h-screen bg-[url('/src/assets/space.jpeg')] overflow-hidden">
             <div
                 className="absolute transition-all duration-500"
@@ -189,7 +202,9 @@ const Game = () => {
                 </div>
             )}
         </div>
+    </>
     );
+
     
 };
 
