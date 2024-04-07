@@ -15,6 +15,7 @@ const Game = () => {
     const stopSound = () => {
         setPlayStatus(Sound.status.STOPPED);
     };
+    const [timeRemaining, setTimeRemaining] = useState(3); // Initial time limit in seconds
 
     const [viewportSize, setViewportSize] = useState({ width: window.innerWidth, height: window.innerHeight });
     const [playerPosition, setPlayerPosition] = useState({ x: viewportSize.width / 2, y: viewportSize.height / 2 });
@@ -44,7 +45,21 @@ const Game = () => {
     // Game setup
     useEffect(() => {
         generateMeteors();
+    
+        const timerInterval = setInterval(() => {
+            setTimeRemaining((prevTime) => prevTime - 1); // Decrement time remaining
+        }, 1000);
+    
+        return () => clearInterval(timerInterval); // Cleanup timer interval
+        console.log(timeRemaining)
     }, []);
+
+    useEffect(() => {
+        if (timeRemaining <= 0) {
+            setGameOver(true); // End the game if time runs out
+        }
+    }, [timeRemaining]);
+
 
     // Generate meteors at random positions
     const generateMeteors = () => {
@@ -88,10 +103,7 @@ const Game = () => {
                 if (((distance < 40 + meteor.radius) || playerPosition.y > 740) || playerPosition.y < 0) {
                     setGameOver(true);
                     return true; // Collision detected
-                }else{
-                    console.log(playerPosition)
                 }
-
                 return false;
 
             });
