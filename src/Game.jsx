@@ -77,8 +77,8 @@ const Game = () => {
                 },
                 radius: 15, // Adjust the radius of meteors as needed
                 velocity: {
-                    x: Math.random() * 3 - 1,
-                    y: Math.random() * 2 - 1,
+                    x: Math.random() * 3.9 - 1,
+                    y: Math.random() * 2.9 - 1,
                 },
             });
         }
@@ -130,31 +130,63 @@ const Game = () => {
     // Handle keyboard events for player movement
     useEffect(() => {
         const handleKeyDown = (event) => {
+            let { key } = event;
             setKeysPressed((prevKeysPressed) => ({
                 ...prevKeysPressed,
-                [event.key]: true,
+                [key]: true,
             }));
 
-            // Start the timer when the key is pressed
-            if (!timer) {
+            if (key === "w"){
+                key='ArrowUp'
+            }
+            if(key==="a"){
+                key ='ArrowLeft'
+            }
+            if(key==="s"){
+                key ='ArrowDown'
+            }
+            if(key==="d"){
+                key ='ArrowRight'
+            }
+        
+            // Start the timer when any navigation key or WASD key is pressed
+            if (!timer && (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight' || key === 'w' || key === 'a' || key === 's' || key === 'd')) {
                 setTimer(setTimeout(() => {
-                    // After 3 seconds, increase speed to 7
+                    // After 3 seconds, increase speed to 8
                     setSpeed(8);
                 }, 3000));
             }
         };
-
+        
         const handleKeyUp = (event) => {
+            let { key } = event;
             setKeysPressed((prevKeysPressed) => ({
                 ...prevKeysPressed,
-                [event.key]: false,
+                [key]: false,
             }));
 
-            // Reset the timer and speed when the key is released
-            clearTimeout(timer);
-            setTimer(null);
-            setSpeed(5); // Reset speed to default
+            if (key === "w"){
+                key='ArrowUp'
+            }
+            if(key==="a"){
+                key ='ArrowLeft'
+            }
+            if(key==="s"){
+                key ='ArrowDown'
+            }
+            if(key==="d"){
+                key ='ArrowRight'
+            }
+
+            // Reset the timer and speed when any navigation key or WASD key is released
+            if (timer && (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight' || key ==="w" || key === 'a' || key === 's' || key === 'd')) {
+                clearTimeout(timer);
+                setTimer(null);
+                setSpeed(5); // Reset speed to default
+            }
         };
+        
+        
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
