@@ -150,7 +150,7 @@ const Game = () => {
             }
         
             // Start the timer when any navigation key or WASD key is pressed
-            if (!timer && (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight' || key === 'w' || key === 'a' || key === 's' || key === 'd')) {
+            if (!timer && (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight')) {
                 setTimer(setTimeout(() => {
                     // After 3 seconds, increase speed to 8
                     setSpeed(8);
@@ -179,7 +179,7 @@ const Game = () => {
             }
 
             // Reset the timer and speed when any navigation key or WASD key is released
-            if (timer && (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight' || key ==="w" || key === 'a' || key === 's' || key === 'd')) {
+            if (timer && (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight')) {
                 clearTimeout(timer);
                 setTimer(null);
                 setSpeed(5); // Reset speed to default
