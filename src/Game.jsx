@@ -65,8 +65,8 @@ const Game = () => {
 
     // Generate meteors at random positions
     const generateMeteors = () => {
-        const numMeteors = 150;
-        const meteorSpreadFactor = 5; // Adjust this factor as needed
+        const numMeteors = 240;
+        const meteorSpreadFactor = 5.4; // Adjust this factor as needed
         const newMeteors = [];
         for (let i = 0; i < numMeteors; i++) {
             newMeteors.push({
@@ -77,8 +77,8 @@ const Game = () => {
                 },
                 radius: 15, // Adjust the radius of meteors as needed
                 velocity: {
-                    x: Math.random() * 3.9 - 1,
-                    y: Math.random() * 2.9 - 1,
+                    x: Math.random() * 4.2 - 1,
+                    y: Math.random() * 1.9 - 1,
                 },
             });
         }
