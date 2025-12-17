@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import Player from './Player';
+import React, { useEffect, useState } from 'react';
+
 import Meteor from './Meteor';
+import Player from './Player';
 import Sound from 'react-sound';
 
 const Game = () => {
@@ -220,10 +221,10 @@ const Game = () => {
 
     return (
         <>
-            <Sound url="/src/assets/win.wav" playStatus={playStatus} onFinishedPlaying={stopSound} />
-            <Sound url="/src/assets/gameOver.wav" playStatus={loseStatus} onFinishedPlaying={stopSound} />
+            <Sound url="win.wav" playStatus={playStatus} onFinishedPlaying={stopSound} />
+            <Sound url="gameOver.wav" playStatus={loseStatus} onFinishedPlaying={stopSound} />
 
-            <div className="relative w-screen h-screen bg-[url('/src/assets/space.jpeg')] overflow-hidden">
+            <div className="relative w-screen h-screen bg-[url('space.jpeg')] overflow-hidden">
                 <div
                     className="absolute transition-all duration-500"
                     style={{
