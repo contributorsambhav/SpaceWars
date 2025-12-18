@@ -224,7 +224,8 @@ const Game = () => {
             <Sound url="win.wav" playStatus={playStatus} onFinishedPlaying={stopSound} />
             <Sound url="gameOver.wav" playStatus={loseStatus} onFinishedPlaying={stopSound} />
 
-            <div className='relative w-screen h-screen bg-[url("space.png")] overflow-hidden'>
+           <div className='relative w-screen h-screen bg-[url("/space.png")] overflow-hidden'>
+
                 <div
                     className="absolute transition-all duration-500"
                     style={{
